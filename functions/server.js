@@ -1,13 +1,13 @@
 const bodyparser = require('body-parser')
 const express = require("express");
 const cors = require('cors');
-require("./config/connect");
+require("../config/connect");
 require('dotenv').config();
 const multer = require('multer');
 // const upload = multer();
 var admin = require("firebase-admin");
 
-var serviceAccount = require("./alfissah-25-01-2024-firebase-adminsdk-opqur-4ee16db904.json");
+var serviceAccount = require("../alfissah-25-01-2024-firebase-adminsdk-opqur-4ee16db904.json");
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
@@ -24,16 +24,20 @@ app.use(express.urlencoded({ extended: true }))
 
 //Routes ---------------------------
 
-const PublicRoutes = require('./Routes/PublicRoutes')
+const PublicRoutes = require('../Routes/PublicRoutes')
 app.use(PublicRoutes);
 
-const StudentRoutes = require('./Routes/StudentRoutes');
+const StudentRoutes = require('../Routes/StudentRoutes');
 app.use("/student", StudentRoutes);
 
 var port = process.env.PORT || '3001'
 app.listen(port,()=>{
     console.log('server started at http://localhost:'+port.toString());
 });
+
+app.use("/.netlify/functions/app", router);
+module.exports.handler = serverless(app);
+
 // app.listen(port, err => {
 //     if (err)
 //         throw err
